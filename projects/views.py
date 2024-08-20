@@ -12,7 +12,6 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser, FormParser
 
 # Create your views here.
-@method_decorator(csrf_exempt, name='dispatch')
 class ProjectView(generics.ListCreateAPIView):
     serializer_class = ProjectSerializer
     def get(self, request):
@@ -37,7 +36,7 @@ class SingleProjectView(generics.ListCreateAPIView):
     serializer_class = ProjectSerializer
     def get(self, request):
         try:
-            projectid = request.GET.get('id')
+            projectid = request.GET.get('id')   
             if not projectid:
                 return JsonResponse({'error': 'Project ID is missing'}, status=400)
             project = Project.objects.get(id=projectid)
