@@ -13,5 +13,8 @@ class Review(models.Model):
             MinValueValidator(1.00),
             MaxValueValidator(5.00)
         ])
+    class Meta:
+        unique_together = ('username', 'course_key')
+
     def __str__(self):
-        return self.username + " " + self.course_key
+        return f"{self.username} {self.course_key}"
