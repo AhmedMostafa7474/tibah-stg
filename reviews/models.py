@@ -18,3 +18,12 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.username} {self.course_key}"
+    
+class ContactUS(models.Model):
+    name = models.CharField(max_length=200)
+    email = models.EmailField(max_length=200)
+    phone  = models.CharField(max_length=100)
+    job_name = models.CharField(max_length=300,null=True,blank=True)
+    message = models.TextField()
+    def __str__(self):
+        return f"{self.name}"

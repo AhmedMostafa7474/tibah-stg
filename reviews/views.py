@@ -7,11 +7,35 @@ from django.utils.decorators import method_decorator
 from rest_framework import generics
 from django.db.models import Avg
 
-from reviews.models import Review
-from reviews.serializers import ReviewSerializer
+from reviews.models import Review,ContactUS
+from reviews.serializers import ContactUsSerializer, ReviewSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser, FormParser
 
+@method_decorator(csrf_exempt, name='dispatch')
+class AllReviewsView(generics.ListCreateAPIView):
+    serializer_class = ReviewSerializer
+    def get(self, request, *args, **kwargs):
+        try:
+            course_reviews = (
+                Review.objects.values('course_key')
+                .annotate(average_rate=Avg('rate'))
+                .order_by('course_key')
+            )
+
+            response_data = [
+                {
+                    'courseid': review['course_key'],
+                    'average_rate': review['average_rate'],
+                }
+                for review in course_reviews
+            ]
+
+            return JsonResponse(response_data,status=200,safe=False)
+    
+        except Review.DoesNotExist: 
+            return JsonResponse({'error': 'Reviews not found.'}, status=404)
+        
 @method_decorator(csrf_exempt, name='dispatch')
 class ReviewView(generics.ListCreateAPIView):
     serializer_class = ReviewSerializer
@@ -69,3 +93,7 @@ class ReviewView(generics.ListCreateAPIView):
 
         review.delete()
         return JsonResponse({'message': 'Review deleted successfully!'}, status=200)
+    
+class ContactUSView(generics.ListCreateAPIView):
+    serializer_class = ContactUsSerializer
+    queryset = ContactUS.objects.all()
