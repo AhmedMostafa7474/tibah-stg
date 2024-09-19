@@ -33,7 +33,8 @@ CORS_ALLOWED_ORIGINS = [
     'https://eyouthlearning.com',
     'https://taibahuniversity.eyouthlearning.com',
     '127.0.0.1:8000',
-    'https://taibahadmin.eyouthlearning.com'
+    'https://taibahadmin.eyouthlearning.com',
+    'https://taybatr.com'
 ]
 # CORS_ALLOW_CREDENTIALS = True
 
