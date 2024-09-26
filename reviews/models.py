@@ -6,7 +6,7 @@ class Review(models.Model):
     course_key = models.CharField(max_length=200)
     course_name = models.CharField(max_length=200)
     username  = models.CharField(max_length=100)
-    image = models.ImageField(null=True,blank=True,upload_to='user-image')
+    image = models.CharField(max_length=500,null=True,blank=True)
     title = models.CharField(max_length=300,null=True,blank=True)
     message = models.TextField()
     rate = models.DecimalField(max_digits=4, decimal_places=2, validators=[
