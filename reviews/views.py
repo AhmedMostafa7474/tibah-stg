@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from rest_framework import generics
 from django.db.models import Avg
+from django.db.models import Count, Q
 
 from reviews.models import Review,ContactUS
 from reviews.serializers import ContactUsSerializer, ReviewSerializer
@@ -54,7 +55,16 @@ class ReviewView(generics.ListCreateAPIView):
             paginated_response = paginator.get_paginated_response(serializer.data)
             paginated_response.data['num_pages'] = num_pages
             average_rate = reviews.aggregate(Avg('rate'))['rate__avg']
+            review_counts = reviews.aggregate(
+                _1=Count('rate', filter=Q(rate=1)),
+                _2=Count('rate', filter=Q(rate=2)),
+                _3=Count('rate', filter=Q(rate=3)),
+                _4=Count('rate', filter=Q(rate=4)),
+                _5=Count('rate', filter=Q(rate=5))
+            )
             paginated_response.data['average_rate'] = average_rate
+            paginated_response.data['review_counts'] = review_counts
+
             return paginated_response
     
         except Review.DoesNotExist:
